@@ -1,0 +1,52 @@
+#{extends 'main.html' /}
+#{set title:'Home' /}
+
+<!--#{welcome /}-->
+#{set 'moreScripts'}
+<script type="text/javascript">
+    
+    $(document).ready(function() {
+        // Generate delete functions for all available categories
+        $(".delete").live("click", function() {
+            var $this = $(this);
+            var id = this.id.replace(/[^0-9]/g, "");
+            $.ajax({
+                type: "DELETE",
+                url : "/bar/"+id ,
+                success : function() {
+                    $this.closest("li").remove();
+                }
+            });
+        });
+
+        $.getJSON('bars.json', function(data, textStatus, jqXHR) {
+            if (eval(data)) {
+                // Append an ordered list of links to the div
+                $.each(data, function(index, item) {
+                    $("#bars").append("<li><a href='/bar/"+item.id+"' class='delete'> Bar " + item.name + "</a><input type='button' class='delete' id='id"+item.id+"'/></li>");
+                });
+
+            }
+        });
+    });   
+    
+</script>
+#{/set}
+
+
+#{form @addBar()}
+<input type="text" name="bar.name"/>
+<input type="submit"/>
+#{/form}
+
+<ol id="bars">
+
+</ol>
+
+<div id="main-content">
+    <div id="existing-content">
+        <ol id="ol">
+
+        </ol>
+    </div>
+</div>
